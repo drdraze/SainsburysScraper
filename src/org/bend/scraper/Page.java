@@ -14,12 +14,37 @@ public class Page {
 //page class represents a page with a list of products
 	String url;
 	String productsElement;
+	Elements products;
 	
 	public Page(String url, String productsElement) {
 		
 		this.url=url;
 		this.productsElement=productsElement;
 		
+	}
+	
+	public Product createProduct(Element element){
+		
+		Element titleElement = element.getElementsByTag("a").first();
+		String title = titleElement.text();
+		String itemLink = titleElement.attr("abs:href");
+		Document doc=null;
+		
+		try {
+			doc = Jsoup.connect(itemLink).get();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Cannot connect to " + itemLink);
+		}
+		
+		String kcal_per_100g = doc.getElementsByClass("nutritionLevel1").first().text();
+		String unit_price = element.getElementsByClass("pricePerUnit").first().text();
+		String description = doc.getElementById("information").getElementsByTag("p").first().text();
+		
+		Product p= new Product(title, unit_price, kcal_per_100g, description); 
+
+		return p;
 	}
 	
 	
@@ -37,7 +62,7 @@ public class Page {
 			}
 			else {
 				Document doc = Jsoup.connect(url).get();
-				Elements products = doc.getElementsByClass(productsElement);
+				products = doc.getElementsByClass("gridItem");
 				if(products==null) {
 					System.out.println("url does not have a productLister gridView element");
 					return false;

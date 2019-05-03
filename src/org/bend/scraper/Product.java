@@ -3,9 +3,16 @@ package org.bend.scraper;
 public class Product {
 
 	String title;
-	int unit_price;
-	int kcal_per_100g;
+	String unit_price;
+	String kcal_per_100g;
 	String description;
+	
+	public Product(String title, String unit_price, String kcal_per_100g, String description) {
+		this.title=title;
+		this.unit_price=unit_price;
+		this.kcal_per_100g=kcal_per_100g;
+		this.description=description;
+	}
 	
 	public String getTitle() {
 		return title;
@@ -13,16 +20,16 @@ public class Product {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public int getUnit_price() {
+	public String getUnit_price() {
 		return unit_price;
 	}
-	public void setUnit_price(int unit_price) {
+	public void setUnit_price(String unit_price) {
 		this.unit_price = unit_price;
 	}
-	public int getKcal_per_100g() {
+	public String getKcal_per_100g() {
 		return kcal_per_100g;
 	}
-	public void setKcal_per_100g(int kcal_per_100g) {
+	public void setKcal_per_100g(String kcal_per_100g) {
 		this.kcal_per_100g = kcal_per_100g;
 	}
 	public String getDescription() {
