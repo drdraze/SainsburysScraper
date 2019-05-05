@@ -7,9 +7,9 @@ public class Product {
 	String kcal_per_100g;
 	String description;
 	
-	public Product(String title, String unit_price, String kcal_per_100g, String description) {
+	public Product(String title, Double unit_price, String kcal_per_100g, String description) {
 		this.title=title;
-		this.unit_price=unit_price;
+		this.unit_price=String.format("%.2f",unit_price);
 		this.kcal_per_100g=kcal_per_100g;
 		this.description=description;
 	}

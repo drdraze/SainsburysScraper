@@ -15,8 +15,7 @@ public class Page {
 //page class represents a page with a list of products
 	private String url;
 	private String productsElement;
-	private ArrayList<Product> productList;
-	
+
 	public String getUrl() {
 		return url;
 	}
@@ -25,20 +24,9 @@ public class Page {
 		this.url = url;
 	}
 
-	public ArrayList<Product> getProductList() {
-		return productList;
-	}
-
-	public void setProductList(ArrayList<Product> productList) {
-		this.productList = productList;
-	}
-
 	public Page(String url, String productsElement) {
-		
 		this.url=url;
 		this.setProductsElement(productsElement);
-		this.productList= new ArrayList();
-		
 	}
 	
 	public Product createProduct(Element element){
@@ -56,14 +44,28 @@ public class Page {
 			System.out.println("Cannot connect to " + itemLink);
 		}
 		//omit kcal if its not there
-		String kcal_per_100g="";
+		String kcal_per_100g=null;
 		if(doc.getElementsByClass("nutritionLevel1").first()!=null) {
 			kcal_per_100g = doc.getElementsByClass("nutritionLevel1").first().text();
 		}
+		
 		String unit_price = element.getElementsByClass("pricePerUnit").first().text();
 		String description = doc.getElementById("information").getElementsByTag("p").first().text();
 		
-		Product p = new Product(title, unit_price, kcal_per_100g, description); 
+		
+		String[] parts = unit_price.split("/");
+		String substring = parts[0];
+		
+		parts = substring.split("£");
+		Double unitDouble = Double.parseDouble(parts[1]);
+		
+		String calDouble="N/A";
+		if(kcal_per_100g!=null){
+			parts = kcal_per_100g.split("k");
+			calDouble = parts[0];
+		}
+		
+		Product p = new Product(title, unitDouble, calDouble, description); 
 
 		return p;
 	}
@@ -82,18 +84,9 @@ public class Page {
 				return false;
 			}
 			else {
-				Document doc = Jsoup.connect(url).get();
-				Elements products = doc.getElementsByClass("gridItem");
-				if(products==null) {
-					System.out.println("url does not have a productLister gridView element");
-					return false;
-				}
-				else
-					for(Element product : products) {
-						productList.add(createProduct(product));
-					}
-					return true;
+				
 			}
+			return true;
 			
 		}
 		catch(MalformedURLException e)
@@ -106,7 +99,26 @@ public class Page {
 		}
 		
 	}
-
+	
+	public ArrayList<Product> genProductList() throws IOException{
+		Document doc = Jsoup.connect(url).get();
+		Elements products = doc.getElementsByClass(productsElement);
+		if(products==null) {
+			System.out.println(url+" does not have a "+productsElement+" element");
+			return null;
+		}
+		else {
+			
+			ArrayList<Product> results = new ArrayList<Product>();
+		
+			for(Element product : products) {
+				results.add(createProduct(product));
+			}
+			
+			return results;
+		}
+			
+	}
 	public String getProductsElement() {
 		return productsElement;
 	}
