@@ -16,7 +16,7 @@ class UnitTests {
 	void createProductTest() {
 		Page page = new Page ("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html","productLister gridView");
 		page.init();
-		Product p = page.createProduct(page.products.first());
+		Product p = page.getProductList().get(0);
 		
 		assertTrue(p.getTitle().equals("Sainsbury's Strawberries 400g"));
 		assertTrue(p.getUnit_price().equals("£1.75/unit"));

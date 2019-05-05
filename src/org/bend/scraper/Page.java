@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,14 +13,31 @@ import org.jsoup.select.Elements;
 
 public class Page {
 //page class represents a page with a list of products
-	String url;
-	String productsElement;
-	Elements products;
+	private String url;
+	private String productsElement;
+	private ArrayList<Product> productList;
 	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public ArrayList<Product> getProductList() {
+		return productList;
+	}
+
+	public void setProductList(ArrayList<Product> productList) {
+		this.productList = productList;
+	}
+
 	public Page(String url, String productsElement) {
 		
 		this.url=url;
-		this.productsElement=productsElement;
+		this.setProductsElement(productsElement);
+		this.productList= new ArrayList();
 		
 	}
 	
@@ -37,12 +55,15 @@ public class Page {
 		{
 			System.out.println("Cannot connect to " + itemLink);
 		}
-		
-		String kcal_per_100g = doc.getElementsByClass("nutritionLevel1").first().text();
+		//omit kcal if its not there
+		String kcal_per_100g="";
+		if(doc.getElementsByClass("nutritionLevel1").first()!=null) {
+			kcal_per_100g = doc.getElementsByClass("nutritionLevel1").first().text();
+		}
 		String unit_price = element.getElementsByClass("pricePerUnit").first().text();
 		String description = doc.getElementById("information").getElementsByTag("p").first().text();
 		
-		Product p= new Product(title, unit_price, kcal_per_100g, description); 
+		Product p = new Product(title, unit_price, kcal_per_100g, description); 
 
 		return p;
 	}
@@ -62,12 +83,15 @@ public class Page {
 			}
 			else {
 				Document doc = Jsoup.connect(url).get();
-				products = doc.getElementsByClass("gridItem");
+				Elements products = doc.getElementsByClass("gridItem");
 				if(products==null) {
 					System.out.println("url does not have a productLister gridView element");
 					return false;
 				}
 				else
+					for(Element product : products) {
+						productList.add(createProduct(product));
+					}
 					return true;
 			}
 			
@@ -81,5 +105,13 @@ public class Page {
 			return false;
 		}
 		
+	}
+
+	public String getProductsElement() {
+		return productsElement;
+	}
+
+	public void setProductsElement(String productsElement) {
+		this.productsElement = productsElement;
 	}
 }
