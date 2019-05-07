@@ -50,8 +50,17 @@ public class Page {
 		}
 		
 		String unit_price = element.getElementsByClass("pricePerUnit").first().text();
+		
 		String description = doc.getElementById("information").getElementsByTag("p").first().text();
 		
+		//there is a special case for the blackcurrants. 
+		// for this listing only the product information is not located in the first p of the information header
+		
+		
+		if(description.equals("")) {
+			description = doc.getElementsByClass("itemTypeGroup").first().getElementsByTag("p").get(1).text();
+			//System.out.println(es.text());
+		}
 		
 		String[] parts = unit_price.split("/");
 		String substring = parts[0];
@@ -59,13 +68,13 @@ public class Page {
 		parts = substring.split("£");
 		Double unitDouble = Double.parseDouble(parts[1]);
 		
-		String calDouble="N/A";
+		String calNum=null;
 		if(kcal_per_100g!=null){
 			parts = kcal_per_100g.split("k");
-			calDouble = parts[0];
+			calNum = parts[0];
 		}
 		
-		Product p = new Product(title, unitDouble, calDouble, description); 
+		Product p = new Product(title, unitDouble, calNum, description); 
 
 		return p;
 	}
