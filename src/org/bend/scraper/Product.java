@@ -1,7 +1,7 @@
 package org.bend.scraper;
 
 public class Product {
-
+//product class to model product listing
 	String title;
 	String unit_price;
 	String kcal_per_100g;

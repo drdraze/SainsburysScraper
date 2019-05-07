@@ -1,6 +1,7 @@
 package org.bend.scraper;
 
 public class Total {
+//total class for total field in json output
 	
 private String gross,vat;
 

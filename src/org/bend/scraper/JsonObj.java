@@ -3,7 +3,7 @@ package org.bend.scraper;
 import java.util.ArrayList;
 
 public class JsonObj {
-
+//class to serialise into JSON
 	private ArrayList<Product> results;
 	private Total total;
 	

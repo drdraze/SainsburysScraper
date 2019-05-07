@@ -13,7 +13,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Page {
-//page class represents a page with a list of products
+//page class represents a page with a list of products. 
+//page class can generate the list of products as POJOs using genProduct List
 	private String url;
 	private String productsElement;
 
