@@ -12,16 +12,12 @@ public class SainsburysScraper {
 		// TODO Auto-generated method stub
 		
 		Page page = new Page ("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html","gridItem");
-		page.init();
-		
-		GsonBuilder builder = new GsonBuilder();
-        builder.disableHtmlEscaping();
-        Gson gson = builder.setPrettyPrinting().create();
         
         ArrayList<Product> results=new ArrayList<Product>();
 		
         try {
-			results = page.genProductList();
+        	page.init();
+        	results = page.genProductList();
 		} catch (IOException e) {
 			System.out.println("cannot connect to url");
 		}
@@ -31,9 +27,13 @@ public class SainsburysScraper {
         for(Product p : results) {
         	grossTotal += Double.parseDouble(p.getUnit_price());
         }
-        Total total = new Total(grossTotal);       
+        Total total = new Total(grossTotal);   
         
         JsonObj json = new JsonObj(results, total);
+        
+        GsonBuilder builder = new GsonBuilder();
+        builder.disableHtmlEscaping();
+        Gson gson = builder.setPrettyPrinting().create();
         
         System.out.println(gson.toJson(json));  
 	}

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class UnitTests {
 
 	@Test
-	void initPageTest() {
+	void initPageTest() throws IOException {
 		Page page = new Page ("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html","productLister gridView");
 		assertTrue(page.init());
 	}
@@ -17,11 +17,11 @@ class UnitTests {
 	@Test
 	void createProductTest() {
 		Page page = new Page ("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html","productLister gridView");
-		page.init();
 		
 		Product p=null;
 		
 		try {
+			page.init();
 			p = page.genProductList().get(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -30,7 +30,7 @@ class UnitTests {
 		
 		assertTrue(p.getTitle().equals("Sainsbury's Strawberries 400g"));
 		assertTrue(p.getUnit_price().contentEquals("1.75"));
-		assertTrue(p.getKcal_per_100g().equals("33kcal"));
+		assertTrue(p.getKcal_per_100g().equals("33"));
 		assertTrue(p.getDescription().equals("by Sainsbury's strawberries"));
 		
 	}	

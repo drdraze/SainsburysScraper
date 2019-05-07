@@ -3,6 +3,7 @@ package org.bend.scraper;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -50,13 +51,10 @@ public class Page {
 		}
 		
 		String unit_price = element.getElementsByClass("pricePerUnit").first().text();
-		
 		String description = doc.getElementById("information").getElementsByTag("p").first().text();
 		
 		//there is a special case for the blackcurrants. 
 		// for this listing only the product information is not located in the first p of the information header
-		
-		
 		if(description.equals("")) {
 			description = doc.getElementsByClass("itemTypeGroup").first().getElementsByTag("p").get(1).text();
 			//System.out.println(es.text());
@@ -80,9 +78,18 @@ public class Page {
 	}
 	
 	
-	public boolean init()
+	public boolean init() throws IOException
 	{
+		if (validateUrl()) {
+			return true;
+		}
+		else
+			return false;
+		
+	}
 	
+	public boolean validateUrl() throws IOException
+	{
 		try {
 			URL address = new URL(this.url);   
 			HttpURLConnection conn = (HttpURLConnection) address.openConnection();
@@ -102,11 +109,7 @@ public class Page {
 		{
 			System.out.println("url is not correctly formed");
 			return false;
-		} catch (IOException e) {
-			System.out.println("cannot connect to url");
-			return false;
 		}
-		
 	}
 	
 	public ArrayList<Product> genProductList() throws IOException{
